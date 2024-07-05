@@ -51,21 +51,21 @@ def main():
             # event loop
             for event in tcod.event.wait():
                 
-                #
+                # initialize action with event handler
                 action = event_handler.dispatch( event )
 
-                #
+                # if no action is detected, continue
                 if action is None:
 
                     continue
 
-                #
+                # if MovementAction is detected, move the player
                 if isinstance( action, MovementAction ):
 
                     player_x += action.dx
                     player_y += action.dy
 
-                #
+                # if EscapeAction is detected, quit the application
                 elif isinstance( action, EscapeAction ):
 
                     raise SystemExit()
