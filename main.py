@@ -1,7 +1,7 @@
 # import dependencies
 import tcod
 
-from actions import EscapeAction, MovementAction  # type: ignore
+from engine import Engine # type: ignore
 from entity import Entity # type: ignore
 from input_handlers import EventHandler # type: ignore
 
@@ -12,6 +12,11 @@ def main():
     screen_width = 80
     screen_height = 50
 
+    # initialize tileset
+    # (path, columns, rows, charmap)
+    tileset = tcod.tileset.load_tilesheet(
+        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD )
+
     # initialize event handler
     event_handler = EventHandler()
 
@@ -20,10 +25,8 @@ def main():
     npc = Entity( int( screen_width / 2 - 5 ), int( screen_height / 2 ), "@", ( 255, 255, 0 ) )
     entities = { player, npc }
 
-    # initialize tileset
-    # (path, columns, rows, charmap)
-    tileset = tcod.tileset.load_tilesheet(
-        "dejavu10x10_gs_tc.png", 32, 8, tcod.tileset.CHARMAP_TCOD )
+    # initialize engine
+    engine = Engine( entities=entities, event_handler=event_handler, player=player )
     
     # initialize tcod context
     # (columns, rows, tileset, title, vsync)
@@ -42,36 +45,14 @@ def main():
         # initialize main loop
         while True:
 
-            # insert char
-            root_console.print( x=player.x, y=player.y, string=player.char, fg=player.color )
+            # render the current frame to the screen
+            engine.render( console=root_console, context=context )
 
-            # present context
-            context.present( root_console )
+            # generate the event queue
+            events = tcod.event.wait()
 
-            # clear console
-            root_console.clear()
-
-            # event loop
-            for event in tcod.event.wait():
-                
-                # initialize action with event handler
-                action = event_handler.dispatch( event )
-
-                # if no action is detected, continue
-                if action is None:
-
-                    continue
-
-                # if MovementAction is detected, move the player
-                if isinstance( action, MovementAction ):
-
-                    player.move( dx=action.dx, dy=action.dy )
-
-                # if EscapeAction is detected, quit the application
-                elif isinstance( action, EscapeAction ):
-
-                    raise SystemExit()
-
+            # engine handles events
+            engine.handle_events( events )
 
 # execute main
 if __name__ == "__main__":
