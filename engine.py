@@ -8,7 +8,7 @@ from actions import EscapeAction, MovementAction
 from entity import Entity
 from input_handlers import EventHandler
 
-#
+# manages the current state of the game
 class Engine:
 
     # initialize engine with a set of entities, an event handler, and the player entity
