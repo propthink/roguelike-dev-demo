@@ -14,7 +14,7 @@ I have several learning objectives for this project:
 	
 	2. Develop familiarity with Git workflow and interacting with a remote repository
 
-	3. Build knowledge base of game development concepts and design techniques including structures, 	patterns, and procedural generation strategies
+	3. Build knowledge base of game development concepts and design techniques including structures, patterns, and procedural generation strategies
 
 
 “Everyone knows that debugging is twice as hard as writing a program in the first place. So if you're as clever as you can be when you write it, how will you ever debug it?” - Brian Kernighan
