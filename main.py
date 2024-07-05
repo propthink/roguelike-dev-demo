@@ -3,6 +3,7 @@ import tcod
 
 from engine import Engine # type: ignore
 from entity import Entity # type: ignore
+from game_map import GameMap # type: ignore
 from input_handlers import EventHandler # type: ignore
 
 # define main
@@ -11,6 +12,10 @@ def main():
     # screen dimensions (in tiles)
     screen_width = 80
     screen_height = 50
+
+    # map dimensions (in tiles)
+    map_width = 80
+    map_height = 45
 
     # initialize tileset
     # (path, columns, rows, charmap)
@@ -25,8 +30,11 @@ def main():
     npc = Entity( int( screen_width / 2 - 5 ), int( screen_height / 2 ), "@", ( 255, 255, 0 ) )
     entities = { player, npc }
 
+    # initialize game map
+    game_map = GameMap( map_width, map_height )
+
     # initialize engine
-    engine = Engine( entities=entities, event_handler=event_handler, player=player )
+    engine = Engine( entities=entities, event_handler=event_handler, game_map=game_map, player=player )
     
     # initialize tcod context
     # (columns, rows, tileset, title, vsync)
