@@ -1,12 +1,12 @@
 This is an implementation of a popular tutorial series. As such, it includes plenty of unoriginal code.
 
-Here is a link to the source material: (https://rogueliketutorials.com/tutorials/tcod/v2/)
+Here is a link to the source material: https://rogueliketutorials.com/tutorials/tcod/v2/
 
 The tutorial is based on the python-tcod library, a Python port of libtcod, a lightweight API designed for roguelike game development that includes support for true color console-based rendering, pathfinding, and dynamic field-of-view, among other features.
 
-python-tcod: (https://github.com/libtcod/python-tcod)
+python-tcod: https://github.com/libtcod/python-tcod
 
-libtcod: (https://github.com/libtcod/libtcod)
+libtcod: https://github.com/libtcod/libtcod
 
 I have several learning objectives for this project:
 
