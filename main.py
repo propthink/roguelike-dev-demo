@@ -1,6 +1,8 @@
 # import dependencies
 import tcod
+
 from actions import EscapeAction, MovementAction  # type: ignore
+from entity import Entity # type: ignore
 from input_handlers import EventHandler # type: ignore
 
 # define main
@@ -10,12 +12,13 @@ def main():
     screen_width = 80
     screen_height = 50
 
-    # player position
-    player_x = int( screen_width / 2 )
-    player_y = int( screen_height / 2 )
-
     # initialize event handler
     event_handler = EventHandler()
+
+    # initialize entities
+    player = Entity( int( screen_width / 2 ), int( screen_height / 2 ), "@", ( 255, 255, 255 ) )
+    npc = Entity( int( screen_width / 2 - 5 ), int( screen_height / 2 ), "@", ( 255, 255, 0 ) )
+    entities = { player, npc }
 
     # initialize tileset
     # (path, columns, rows, charmap)
@@ -40,7 +43,7 @@ def main():
         while True:
 
             # insert char
-            root_console.print( x=player_x, y=player_y, string="@" )
+            root_console.print( x=player.x, y=player.y, string=player.char, fg=player.color )
 
             # present context
             context.present( root_console )
@@ -62,8 +65,7 @@ def main():
                 # if MovementAction is detected, move the player
                 if isinstance( action, MovementAction ):
 
-                    player_x += action.dx
-                    player_y += action.dy
+                    player.move( dx=action.dx, dy=action.dy )
 
                 # if EscapeAction is detected, quit the application
                 elif isinstance( action, EscapeAction ):
