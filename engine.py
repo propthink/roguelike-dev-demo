@@ -4,7 +4,6 @@ from typing import Set, Iterable, Any
 from tcod.context import Context
 from tcod.console import Console
 
-from actions import EscapeAction, MovementAction
 from entity import Entity
 from game_map import GameMap # type: ignore
 from input_handlers import EventHandler
@@ -34,17 +33,8 @@ class Engine:
 
                 continue
 
-            # if MovementAction is detected, move the player
-            if isinstance( action, MovementAction ):
-
-                if self.game_map.tiles[ "walkable" ][ self.player.x + action.dx, self.player.y + action.dy ]:
-                    
-                    self.player.move( dx=action.dx, dy=action.dy )
-
-            # if EscapeAction is detected, quit the application
-            elif isinstance( action, EscapeAction ):
-
-                raise SystemExit()
+            # execute action
+            action.perform( self, self.player )
             
     # render the current frame to the screen
     def render( self, console: Console, context: Context ) -> None:
