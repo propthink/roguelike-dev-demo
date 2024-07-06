@@ -3,8 +3,8 @@ import tcod
 
 from engine import Engine # type: ignore
 from entity import Entity # type: ignore
-from game_map import GameMap # type: ignore
 from input_handlers import EventHandler # type: ignore
+from proc_gen import generate_dungeon # type: ignore
 
 # define main
 def main():
@@ -31,7 +31,7 @@ def main():
     entities = { player, npc }
 
     # initialize game map
-    game_map = GameMap( map_width, map_height )
+    game_map = generate_dungeon( map_width, map_height )
 
     # initialize engine
     engine = Engine( entities=entities, event_handler=event_handler, game_map=game_map, player=player )
