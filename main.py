@@ -60,7 +60,7 @@ def main():
         
         # initialize root console
         # (width, height, order)
-        root_console = tcod.Console( screen_width, screen_height, order="F" )
+        root_console = tcod.console.Console( screen_width, screen_height, order="F" )
 
         # initialize main loop
         while True:

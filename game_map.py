@@ -22,4 +22,4 @@ class GameMap:
     # render the entire map using the console class's tile_rgb method
     def render( self, console: Console ) -> None:
 
-        console.tiles_rgb[ 0:self.width, 0:self.height ] = self.tiles[ "dark" ]
+        console.rgb[ 0:self.width, 0:self.height ] = self.tiles[ "dark" ]
