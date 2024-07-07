@@ -1,7 +1,7 @@
 # import dependencies
 from typing import Optional
 import tcod.event
-from actions import Action, EscapeAction, MovementAction  # type: ignore
+from actions import Action, EscapeAction, BumpAction  # type: ignore
 
 # used to dispatch events to specific methods
 class EventHandler( tcod.event.EventDispatch[ Action ] ):
@@ -23,22 +23,22 @@ class EventHandler( tcod.event.EventDispatch[ Action ] ):
         # user presses up
         if key == tcod.event.KeySym.UP:
 
-            action = MovementAction( dx=0, dy=-1 )
+            action = BumpAction( dx=0, dy=-1 )
 
         # user presses down
         elif key == tcod.event.KeySym.DOWN:
 
-            action = MovementAction( dx=0, dy=1 )
+            action = BumpAction( dx=0, dy=1 )
 
         # user presses left
         elif key == tcod.event.KeySym.LEFT:
 
-            action = MovementAction( dx=-1, dy=0 )
+            action = BumpAction( dx=-1, dy=0 )
 
         # user presses right
         elif key == tcod.event.KeySym.RIGHT:
 
-            action = MovementAction( dx=1, dy=0 )
+            action = BumpAction( dx=1, dy=0 )
 
         # user presses escape
         elif key == tcod.event.KeySym.ESCAPE:
