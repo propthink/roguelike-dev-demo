@@ -83,7 +83,7 @@ def generate_dungeon(
 ) -> GameMap:
     
     # initialize empty game map
-    dungeon = GameMap( map_width, map_height )
+    dungeon = GameMap( map_width, map_height, entities=[ player ] )
 
     # initialize a container for generated rooms
     rooms: List[ RectangularRoom ] = []
