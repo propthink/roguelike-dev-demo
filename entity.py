@@ -4,6 +4,8 @@ from __future__ import annotations
 import copy
 from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
 
+from render_order import RenderOrder # type: ignore
+
 if TYPE_CHECKING:
     from componets.ai import BaseAI # type: ignore
     from componets.fighter import Fighter # type: ignore
@@ -27,7 +29,8 @@ class Entity:
         char: str="?",
         color: Tuple[ int, int, int ] = ( 255, 255, 255 ),
         name: str="<unnamed>",
-        blocks_movement: bool = False
+        blocks_movement: bool = False,
+        render_order: RenderOrder = RenderOrder.CORPSE
     ):
         self.x = x
         self.y = y
@@ -35,6 +38,7 @@ class Entity:
         self.color = color
         self.name = name
         self.blocks_movement = blocks_movement
+        self.render_order = render_order
         
         # if gamemap is not provided now then it will be set later
         if gamemap:
@@ -96,7 +100,8 @@ class Actor( Entity ):
             char=char,
             color=color,
             name=name,
-            blocks_movement=True
+            blocks_movement=True,
+            render_order=RenderOrder.ACTOR
         )
         self.ai: Optional[ BaseAI ] = ai_cls( self )        
         self.fighter = fighter

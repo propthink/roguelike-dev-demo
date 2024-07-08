@@ -3,10 +3,39 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 import tcod.event
-from actions import Action, EscapeAction, BumpAction  # type: ignore
+from actions import Action, EscapeAction, BumpAction, WaitAction  # type: ignore
 
 if TYPE_CHECKING:
     from engine import Engine
+
+#
+MOVE_KEYS = {
+    # arrow keys
+    tcod.event.KeySym.UP: ( 0, -1 ),
+    tcod.event.KeySym.DOWN: ( 0, 1 ),
+    tcod.event.KeySym.LEFT: ( -1, 0 ),
+    tcod.event.KeySym.RIGHT: ( 1, 0 ),
+    tcod.event.KeySym.HOME: ( -1, -1 ),
+    tcod.event.KeySym.END: ( -1, 1 ),
+    tcod.event.KeySym.PAGEUP: ( 1, -1 ),
+    tcod.event.KeySym.PAGEDOWN: ( 1, 1 ),
+    # numpad keys
+    tcod.event.KeySym.KP_1: ( -1, 1 ),
+    tcod.event.KeySym.KP_2: ( 0, 1 ),
+    tcod.event.KeySym.KP_3: ( 1, 1 ),
+    tcod.event.KeySym.KP_4: ( -1, 0 ),
+    tcod.event.KeySym.KP_6: ( 1, 0 ),
+    tcod.event.KeySym.KP_7: ( -1, -1 ),
+    tcod.event.KeySym.KP_8: ( 0, -1 ),
+    tcod.event.KeySym.KP_9: ( 1, -1 )
+}
+
+#
+WAIT_KEYS = {
+    tcod.event.KeySym.KP_PERIOD,
+    tcod.event.KeySym.KP_5,
+    tcod.event.KeySym.KP_CLEAR
+}
 
 # used to dispatch events to specific methods
 class EventHandler( tcod.event.EventDispatch[ Action ] ):
@@ -54,25 +83,17 @@ class EventHandler( tcod.event.EventDispatch[ Action ] ):
         # grab the player from the engine
         player = self.engine.player
 
-        # user presses up
-        if key == tcod.event.KeySym.UP:
+        # user attempts to move
+        if key in MOVE_KEYS:
 
-            action = BumpAction( player, dx=0, dy=-1 )
+            dx, dy = MOVE_KEYS[ key ]
 
-        # user presses down
-        elif key == tcod.event.KeySym.DOWN:
+            action = BumpAction( player, dx, dy )
 
-            action = BumpAction( player, dx=0, dy=1 )
+        # user attempts to wait
+        elif key in WAIT_KEYS:
 
-        # user presses left
-        elif key == tcod.event.KeySym.LEFT:
-
-            action = BumpAction( player, dx=-1, dy=0 )
-
-        # user presses right
-        elif key == tcod.event.KeySym.RIGHT:
-
-            action = BumpAction( player, dx=1, dy=0 )
+            action = WaitAction( player )
 
         # user presses escape
         elif key == tcod.event.KeySym.ESCAPE:
