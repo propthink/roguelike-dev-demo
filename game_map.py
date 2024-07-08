@@ -9,13 +9,16 @@ from tcod.console import Console
 import tile_types  # type: ignore
 
 if TYPE_CHECKING:
+    from engine import Engine
     from entity import Entities
 
 #
 class GameMap:
 
     # initialize game map and fill with wall tiles
-    def __init__( self, width: int, height: int, entities: Iterable[ Entity ] = () ):  # type: ignore
+    def __init__( self, engine: Engine, width: int, height: int, entities: Iterable[ Entity ] = () ):  # type: ignore
+
+        self.engine = engine
 
         self.width, self.height = width, height
 
@@ -24,19 +27,28 @@ class GameMap:
         self.tiles = np.full( ( width, height ), fill_value=tile_types.wall, order="F" )
 
         # tiles the player can currently see
-        self.visible = np.full( ( width, height ), fill_value=False, order="F" )
+        self.visible = np.full( 
+            ( width, height ), fill_value=False, order="F" 
+        )
 
         # tiles the player has seen before
-        self.explored = np.full( ( width, height ), fill_value=False, order="F" )
+        self.explored = np.full( 
+            ( width, height ), fill_value=False, order="F" 
+        )
 
     # this function iterates through all of the entities in the game map, and if one is
     # found that blocks movement and occupies the given location, it returns that entity
-    def get_blocking_entity_at_location( self, location_x: int, location_y: int ) -> Optional[ Entity ]: # type: ignore
+    def get_blocking_entity_at_location( 
+        self, location_x: int, location_y: int 
+    ) -> Optional[ Entity ]: # type: ignore
 
         for entity in self.entities:
 
-            if entity.blocks_movement and entity.x == location_x and entity.y == location_y:
-
+            if( 
+                entity.blocks_movement 
+                and entity.x == location_x 
+                and entity.y == location_y
+            ):
                 return entity
             
         return None
@@ -52,7 +64,7 @@ class GameMap:
         # if a tile is in the "visible array", then draw it with the "light" color
         # if it is not visible, but it is in the explored array, then draw it with the "dark" color
         # otherwise, the default is "SHROUD"
-        console.rgb[ 0:self.width, 0:self.height ] = np.select(
+        console.rgb[ 0 : self.width, 0 : self.height ] = np.select(
             condlist=[ self.visible, self.explored ],
             choicelist=[ self.tiles[ "light" ], self.tiles[ "dark" ] ],
             default=tile_types.SHROUD
