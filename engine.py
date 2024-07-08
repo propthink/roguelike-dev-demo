@@ -30,9 +30,11 @@ class Engine:
     # handle moves for enemy entities
     def handle_enemy_turns( self ) -> None:
 
-        for entity in self.game_map.entities - { self.player }:
+        for entity in set( self.game_map.actors ) = { self.player }:
+    
+            if entity.ai:
 
-            pass # print( f"the {entity.name} is eating a banana" )
+                entity.ai.perform()
 
     # recompute the visible area based on the player's point of view
     def update_fov( self ) -> None:

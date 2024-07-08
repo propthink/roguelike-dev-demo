@@ -1,11 +1,12 @@
 # import dependencies
 from __future__ import annotations
 
-from typing import Iterable, Optional, TYPE_CHECKING
+from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 
 import numpy as np
 from tcod.console import Console
 
+from entity import Actor # type: ignore
 import tile_types  # type: ignore
 
 if TYPE_CHECKING:
@@ -36,6 +37,16 @@ class GameMap:
             ( width, height ), fill_value=False, order="F" 
         )
 
+    # iterate over this map's living actors
+    @property
+    def actors( self ) -> Iterator[ Actor ]:
+
+        yield from(
+            entity
+            for entity in self.entities
+            if isinstance( entity, Actor ) and entity.is_alive
+        )
+
     # this function iterates through all of the entities in the game map, and if one is
     # found that blocks movement and occupies the given location, it returns that entity
     def get_blocking_entity_at_location( 
@@ -52,6 +63,15 @@ class GameMap:
                 return entity
             
         return None
+    
+    # return the actor at the specified location
+    def get_actor_at_location( self, x: int, y: int ) -> Optional[ Actor ]:
+
+        for actor in self.actors:
+
+            if actor.x == x and actor.y == y:
+
+                return actor
 
     # return true if x and y are inside of the bounds of this map
     def in_bounds( self, x: int, y: int ) -> bool:

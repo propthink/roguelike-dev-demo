@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 import copy
-from typing import Optional, Tuple, TypeVar, TYPE_CHECKING
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from componets.ai import BaseAI # type: ignore
+    from componets.fighter import Fighter # type: ignore
     from game_map import GameMap
 
 #
@@ -71,3 +73,37 @@ class Entity:
 
         self.x += dx
         self.y += dy
+
+# an entity capable of performing actions
+class Actor( Entity ):
+
+    def __init__(
+            
+        self,
+        *,
+        x: int=0,
+        y: int=0,
+        char: str="?",
+        color: Tuple[ int, int, int ] = ( 255, 255, 255 ),
+        name: str = "<Unnamed>",
+        ai_cls: Type[ BaseAI ],
+        fighter: Fighter
+    ):
+        super().__init__(
+
+            x=x,
+            y=y,
+            char=char,
+            color=color,
+            name=name,
+            blocks_movement=True
+        )
+        self.ai: Optional[ BaseAI ] = ai_cls( self )        
+        self.fighter = fighter
+        self.fighter.entity = self
+
+    # returns true as long as this actor can perform actions
+    @property
+    def is_alive( self ) -> bool:
+
+        return bool( self.ai )

@@ -40,6 +40,13 @@ class EscapeAction( Action ):
 
         raise SystemExit()
     
+# simply wait
+class WaitAction( Action ):
+
+    def perform( self ) -> None:
+
+        pass
+    
 #
 class ActionWithDirection( Action ):
 
