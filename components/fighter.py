@@ -1,8 +1,8 @@
 # import dependencies
-from componets.base_componet import BaseComponet # type: ignore
+from components.base_component import BaseComponent # type: ignore
 
 # a componet class for combat enabled entities
-class Fighter( BaseComponet ):
+class Fighter( BaseComponent ):
 
     def __init__( self, hp: int, defense: int, power: int ):
 

@@ -1,6 +1,6 @@
 # import dependencies
-from componets.ai import HostileEnemy # type: ignore
-from componets.fighter import Fighter # type: ignore
+from components.ai import HostileEnemy # type: ignore
+from components.fighter import Fighter # type: ignore
 from entity import Actor # type: ignore
 
 # human, player

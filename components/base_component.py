@@ -8,7 +8,7 @@ if TYPE_CHECKING:
     from entity import Entity # type: ignore
 
 #
-class BaseComponet:
+class BaseComponent:
 
     entity: Entity # owning entity instance
 
