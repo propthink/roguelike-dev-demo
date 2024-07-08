@@ -4,6 +4,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from components.base_component import BaseComponent # type: ignore
+from input_handlers import GameOverEventHandler # type: ignore
 from render_order import RenderOrder # type: ignore
 
 if TYPE_CHECKING:
@@ -40,6 +41,7 @@ class Fighter( BaseComponent ):
         if self.engine.player is self.entity:
 
             death_message = "You died!"
+            self.engine.event_handler = GameOverEventHandler( self.engine )
 
         else:
 
