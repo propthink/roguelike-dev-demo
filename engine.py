@@ -10,6 +10,7 @@ from tcod.map import compute_fov
 from entity import Entity # type: ignore
 from game_map import GameMap # type: ignore
 from input_handlers import MainGameEventHandler
+from render_functions import render_bar # type: ignore
 
 if TYPE_CHECKING:
     from entity import Actor # type: ignore
@@ -55,11 +56,12 @@ class Engine:
         # render the game map
         self.game_map.render( console )
 
-        #
-        console.print(
-            x=1,
-            y=47,
-            string=f"HP: { self.player.fighter.hp } / { self.player.fighter.max_hp }"
+        # render health bar
+        render_bar(
+            console=console,
+            current_value=self.player.fighter.hp,
+            maximum_value=self.player.fighter.max_hp,
+            total_width=20
         )
 
         # present context
