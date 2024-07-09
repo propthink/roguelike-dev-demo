@@ -2,6 +2,7 @@
 import copy
 import tcod
 
+import color
 from engine import Engine # type: ignore
 import entity_factories
 from proc_gen import generate_dungeon # type: ignore
@@ -15,7 +16,7 @@ def main():
 
     # map dimensions (in tiles)
     map_width = 80
-    map_height = 45
+    map_height = 43
 
     # room dimensions
     room_max_size = 10
@@ -47,6 +48,11 @@ def main():
         engine=engine
     )
     engine.update_fov()
+
+    # welcome message
+    engine.message_log.add_message(
+        "I used to be an adventurer like you. Then I took an arrow in the knee...", color.welcome_text
+    )
     
     # initialize tcod context
     # (columns, rows, tileset, title, vsync)

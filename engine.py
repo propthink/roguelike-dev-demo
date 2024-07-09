@@ -10,6 +10,7 @@ from tcod.map import compute_fov
 from entity import Entity # type: ignore
 from game_map import GameMap # type: ignore
 from input_handlers import MainGameEventHandler
+from message_log import MessageLog # type: ignore
 from render_functions import render_bar # type: ignore
 
 if TYPE_CHECKING:
@@ -27,6 +28,7 @@ class Engine:
     def __init__( self, player: Actor ):
 
         self.event_handler: EventHandler = MainGameEventHandler( self )
+        self.message_log = MessageLog()
         self.player = player
 
     # handle moves for enemy entities
@@ -55,6 +57,9 @@ class Engine:
 
         # render the game map
         self.game_map.render( console )
+
+        # render the message log
+        self.message_log.render( console=console, x=21, y=45, width=40, height=5 )
 
         # render health bar
         render_bar(
