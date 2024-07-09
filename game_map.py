@@ -37,6 +37,12 @@ class GameMap:
             ( width, height ), fill_value=False, order="F" 
         )
 
+    # return self
+    @property
+    def gamemap( self ) -> GameMap:
+
+        return self
+
     # iterate over this map's living actors
     @property
     def actors( self ) -> Iterator[ Actor ]:

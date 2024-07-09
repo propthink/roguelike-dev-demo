@@ -18,12 +18,12 @@ T = TypeVar( "T", bound="Entity" )
 class Entity:
 
     #
-    gamemap: GameMap
+    parent: GameMap
 
     # initialize object with location, glyph, and color
     def __init__(
         self,
-        gamemap: Optional[ GameMap ] = None,
+        parent: Optional[ GameMap ] = None,
         x: int=0,
         y: int=0,
         char: str="?",
@@ -40,11 +40,17 @@ class Entity:
         self.blocks_movement = blocks_movement
         self.render_order = render_order
         
-        # if gamemap is not provided now then it will be set later
-        if gamemap:
+        # if parent is not provided now then it will be set later
+        if parent:
 
-            self.gamemap = gamemap
-            gamemap.entities.add( self )
+            self.parent = parent
+            parent.entities.add( self )
+
+    #
+    @property
+    def gamemap( self ) -> GameMap:
+
+        return self.parent.gamemap
 
     # spawn a copy of this instance at the given location
     def spawn( self: T, gamemap: GameMap, x: int, y: int ) -> T:
@@ -52,7 +58,7 @@ class Entity:
         clone = copy.deepcopy( self )
         clone.x = x
         clone.y = y
-        clone.gamemap = gamemap
+        clone.parent = gamemap
         gamemap.entities.add( clone )
         return clone
     
@@ -64,11 +70,13 @@ class Entity:
 
         if gamemap:
 
-            if hasattr( self, "gamemap" ): # possibly uninitialized
+            if hasattr( self, "parent" ): # possibly uninitialized
 
-                self.gamemap.entities.remove( self )
+                if self.parent is self.gamemap:
 
-            self.gamemap = gamemap
+                    self.gamemap.entities.remove( self )
+                    
+            self.parent = gamemap
 
             gamemap.entities.add( self )
 
@@ -105,7 +113,7 @@ class Actor( Entity ):
         )
         self.ai: Optional[ BaseAI ] = ai_cls( self )        
         self.fighter = fighter
-        self.fighter.entity = self
+        self.fighter.parent = self
 
     # returns true as long as this actor can perform actions
     @property

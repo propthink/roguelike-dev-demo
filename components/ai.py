@@ -7,16 +7,12 @@ import numpy as np
 import tcod
 
 from actions import Action, MeleeAction, MovementAction, WaitAction # type: ignore
-from components.base_component import BaseComponent # type: ignore
 
 if TYPE_CHECKING:
     from entity import Actor # type: ignore
 
 # basic ai functionality for enemy entities
-class BaseAI( Action, BaseComponent ):
-
-    #
-    entity: Actor
+class BaseAI( Action ):
 
     # implemented by subclass
     def perform( self ) -> None:
