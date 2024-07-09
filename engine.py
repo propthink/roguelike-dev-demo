@@ -3,7 +3,6 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from tcod.context import Context
 from tcod.console import Console
 from tcod.map import compute_fov
 
@@ -11,7 +10,7 @@ from entity import Entity # type: ignore
 from game_map import GameMap # type: ignore
 from input_handlers import MainGameEventHandler
 from message_log import MessageLog # type: ignore
-from render_functions import render_bar # type: ignore
+from render_functions import render_bar, render_names_at_mouse_location # type: ignore
 
 if TYPE_CHECKING:
     from entity import Actor # type: ignore
@@ -29,6 +28,7 @@ class Engine:
 
         self.event_handler: EventHandler = MainGameEventHandler( self )
         self.message_log = MessageLog()
+        self.mouse_location = ( 0, 0 )
         self.player = player
 
     # handle moves for enemy entities
@@ -53,7 +53,7 @@ class Engine:
         self.game_map.explored |= self.game_map.visible
             
     # render the current frame to the screen
-    def render( self, console: Console, context: Context ) -> None:
+    def render( self, console: Console ) -> None:
 
         # render the game map
         self.game_map.render( console )
@@ -68,9 +68,5 @@ class Engine:
             maximum_value=self.player.fighter.max_hp,
             total_width=20
         )
-
-        # present context
-        context.present( console )
-
-        # clear console
-        console.clear()
+        # render entity names at the mouse location
+        render_names_at_mouse_location( console=console, x=21, y=44, engine=self )
