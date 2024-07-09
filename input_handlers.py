@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from typing import Optional, TYPE_CHECKING
 import tcod.event
+from tcod import libtcodpy
 from actions import Action, EscapeAction, BumpAction, WaitAction  # type: ignore
 
 if TYPE_CHECKING:
@@ -122,6 +123,11 @@ class MainGameEventHandler( EventHandler ):
 
             action = EscapeAction( player )
 
+        # user accesses message log history
+        elif key == tcod.event.KeySym.v:
+
+            self.engine.event_handler = HistoryViewer( self.engine )
+
         # return Action object, or none if no relevant key press was detected
         return action
     
@@ -162,3 +168,82 @@ class GameOverEventHandler( EventHandler ):
 
         # no valid keys was pressed
         return action
+    
+#
+CURSOR_Y_KEYS = {
+    tcod.event.KeySym.UP: -1,
+    tcod.event.KeySym.DOWN: 1,
+    tcod.event.KeySym.PAGEUP: -10,
+    tcod.event.KeySym.PAGEDOWN: 10
+}
+
+# print the history on a larger window which can be navigated
+class HistoryViewer( EventHandler ):
+
+    def __init__( self, engine: Engine ):
+
+        super().__init__( engine )
+
+        self.log_length = len( engine.message_log.messages )
+
+        self.cursor = self.log_length - 1
+
+    #
+    def on_render( self, console: tcod.Console ) -> None:
+
+        # draw the main state as the background
+        super().on_render( console )
+
+        # initialize the log console
+        log_console = tcod.console.Console( console.width - 6, console.height - 6 )
+
+        # draw a frame with a custom banner title
+        log_console.draw_frame( 0, 0, log_console.width, log_console.height )
+
+        log_console.print_box(
+            0, 0, log_console.width, 1, "|Message History|", alignment=libtcodpy.CENTER
+        )
+        # render the mesage log using the cursor parameter
+        self.engine.message_log.render_messages(
+            log_console,
+            1,
+            1,
+            log_console.width - 2,
+            log_console.height -2,
+            self.engine.message_log.messages[ : self.cursor + 1 ]
+        )
+        log_console.blit( console, 3, 3 )
+
+    # fancy conditional movement to make it feel right
+    def ev_keydown( self, event: tcod.event.KeyDown ) -> None:
+
+        if event.sym in CURSOR_Y_KEYS:
+
+            adjust = CURSOR_Y_KEYS[ event.sym ]
+
+            if adjust < 0 and self.cursor == 0:
+
+                # only move from the top to the bottom when you're on the edge
+                self.cursor = self.log_length - 1
+
+            elif adjust > 0 and self.cursor == self.log_length - 1:
+
+                # same with bottom to top movement
+                self.cursor = 0
+
+            else:
+
+                # otherwise move while staying clamped to the bounds of the history log
+                self.cursor = max( 0, min( self.cursor + adjust, self.log_length - 1 ) )
+
+        elif event.sym == tcod.event.KeySym.HOME:
+
+            self.cursor = 0 # move directly to the top message
+
+        elif event.sym == tcod.event.KeySym.END:
+
+            self.cursor = self.log_length - 1 # move directly to the last message
+
+        else: # any other key moves back to the main game state
+
+            self.engine.event_handler = MainGameEventHandler( self.engine )
