@@ -37,6 +37,29 @@ class Fighter( BaseComponent ):
 
             self.die()
 
+    # heal an amount of HP, up to the max, and return the amount that was healed
+    def heal( self, amount: int ) -> int:
+
+        if self.hp == self.max_hp:
+
+            return 0
+        
+        new_hp_value = self.hp + amount
+
+        if new_hp_value > self.max_hp:
+
+            new_hp_value = self.max_hp
+
+        amount_recovered = new_hp_value - self.hp
+
+        self.hp = new_hp_value
+
+        return amount_recovered
+    
+    def take_damage( self, amount: int ) -> None:
+
+        self.hp -= amount
+
     def die( self ) -> None:
 
         if self.engine.player is self.parent:

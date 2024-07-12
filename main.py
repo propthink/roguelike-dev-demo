@@ -1,5 +1,6 @@
 # import dependencies
 import copy
+import traceback
 import tcod
 
 import color
@@ -77,7 +78,19 @@ def main():
 
             context.present( root_console )
 
-            engine.event_handler.handle_events( context )
+            try:
+                
+                for event in tcod.event.wait():
+
+                    context.convert_event( event )
+                    engine.event_handler.handle_events( event )
+
+            except Exception: # handle exceptions in game
+
+                traceback.print_exc() # print error to stderr
+
+                # then print the error to the message log
+                engine.message_log.add_message( traceback.format_exc(), color.error )
 
 # execute main
 if __name__ == "__main__":
