@@ -1,6 +1,6 @@
 # import dependencies
 from components.ai import HostileEnemy # type: ignore
-from components.consumable import HealingConsumable # type: ignore
+from components import consumable # type: ignore
 from components.fighter import Fighter # type: ignore
 from components.inventory import Inventory # type: ignore
 from entity import Actor, Item # type: ignore
@@ -40,5 +40,13 @@ health_potion = Item(
     char="!",
     color=(127, 0, 255),
     name="Health Potion",
-    consumable=HealingConsumable(amount=4)
+    consumable=consumable.HealingConsumable(amount=4)
+)
+
+# lightning scroll
+lightning_scroll = Item(
+    char="~",
+    color=( 255, 255, 0 ),
+    name="Lightning Scroll",
+    consumable=consumable.LightningDamageConsumable(damage=20, maximum_range=5)
 )
