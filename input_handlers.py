@@ -4,7 +4,7 @@ from __future__ import annotations
 from typing import Optional, TYPE_CHECKING
 import tcod.event # type: ignore
 from tcod import libtcodpy # type: ignore
-from actions import Action, EscapeAction, BumpAction, WaitAction  # type: ignore
+from actions import Action, PickupAction, EscapeAction, BumpAction, WaitAction  # type: ignore
 import color # type: ignore
 import exceptions # type: ignore
 
@@ -125,6 +125,11 @@ class MainGameEventHandler( EventHandler ):
         elif key == tcod.event.KeySym.v:
 
             self.engine.event_handler = HistoryViewer( self.engine )
+
+        # user attempts to pick up an item
+        elif key == tcod.event.KeySym.g:
+
+            action = PickupAction( player )
 
         # return Action object, or none if no relevant key press was detected
         return action

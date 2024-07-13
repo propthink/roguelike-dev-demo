@@ -6,7 +6,7 @@ from typing import Iterable, Iterator, Optional, TYPE_CHECKING
 import numpy as np
 from tcod.console import Console
 
-from entity import Actor # type: ignore
+from entity import Actor, Item # type: ignore
 import tile_types  # type: ignore
 
 if TYPE_CHECKING:
@@ -52,6 +52,10 @@ class GameMap:
             for entity in self.entities
             if isinstance( entity, Actor ) and entity.is_alive
         )
+
+    @property
+    def items( self ) -> Iterator[Item]:
+        yield from ( entity for entity in self.entities if isinstance( entity, Item ) )
 
     # this function iterates through all of the entities in the game map, and if one is
     # found that blocks movement and occupies the given location, it returns that entity

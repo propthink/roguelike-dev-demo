@@ -24,8 +24,8 @@ def main():
     room_min_size = 6
     max_rooms = 30
 
-    # monster limit
-    max_monsters_per_room = 2
+    max_monsters_per_room = 2 # monster limit
+    max_items_per_room = 2 # item limit
 
     # initialize tileset
     # (path, columns, rows, charmap)
@@ -46,6 +46,7 @@ def main():
         map_width=map_width,
         map_height=map_height,
         max_monsters_per_room=max_monsters_per_room,
+        max_items_per_room=max_items_per_room,
         engine=engine
     )
     engine.update_fov()
