@@ -88,13 +88,13 @@ class ItemAction( Action ):
     def perform( self ) -> None:
 
         self.item.consumable.activate( self )
-
-# used to quit application on user request
-class EscapeAction( Action ):
+    
+#
+class DropItem( ItemAction ):
 
     def perform( self ) -> None:
 
-        raise SystemExit()
+        self.entity.inventory.drop( self.item )
     
 # simply wait
 class WaitAction( Action ):

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import copy
-from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING
+from typing import Optional, Tuple, Type, TypeVar, TYPE_CHECKING, Union
 
 from render_order import RenderOrder # type: ignore
 
@@ -20,7 +20,7 @@ T = TypeVar( "T", bound="Entity" )
 class Entity:
 
     #
-    parent: GameMap
+    parent: Union[ GameMap, Inventory ]
 
     # initialize object with location, glyph, and color
     def __init__(

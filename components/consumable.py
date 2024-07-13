@@ -3,6 +3,7 @@ from typing import Optional, TYPE_CHECKING
 
 import actions # type: ignore
 import color # type: ignore
+import components.inventory # type: ignore
 from components.base_component import BaseComponent # type: ignore
 from exceptions import Impossible # type: ignore
 
@@ -23,6 +24,17 @@ class Consumable( BaseComponent ):
 
         raise NotImplementedError()
     
+    # remove the consumed item from its containing inventory
+    def consume( self ) -> None:
+
+        entity = self.parent
+
+        inventory = entity.parent
+
+        if isinstance( inventory, components.inventory.Inventory ):
+
+            inventory.items.remove( entity )
+    
 class HealingConsumable( Consumable ):
 
     def __init__( self, amount: int ):
@@ -40,6 +52,7 @@ class HealingConsumable( Consumable ):
                 f"You consume the {self.parent.name}, and recover {amount_recovered} HP!",
                 color.health_recovered
             )
+            self.consume()
         else:
 
             raise Impossible( f"Your health is already full." )
