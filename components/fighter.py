@@ -5,7 +5,6 @@ from typing import TYPE_CHECKING
 
 import color # type: ignore
 from components.base_component import BaseComponent # type: ignore
-from input_handlers import GameOverEventHandler # type: ignore
 from render_order import RenderOrder # type: ignore
 
 if TYPE_CHECKING:
@@ -66,7 +65,6 @@ class Fighter( BaseComponent ):
 
             death_message = "You died!"
             death_message_color = color.player_die
-            self.engine.event_handler = GameOverEventHandler( self.engine )
 
         else:
 

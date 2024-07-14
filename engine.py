@@ -9,14 +9,12 @@ from tcod.map import compute_fov
 from entity import Entity # type: ignore
 from game_map import GameMap # type: ignore
 import exceptions
-from input_handlers import MainGameEventHandler
 from message_log import MessageLog # type: ignore
 from render_functions import render_bar, render_names_at_mouse_location # type: ignore
 
 if TYPE_CHECKING:
     from entity import Actor # type: ignore
     from game_map import GameMap
-    from input_handlers import EventHandler
 
 # manages the current state of the game
 class Engine:
@@ -26,8 +24,7 @@ class Engine:
 
     # initialize engine with a set of entities, an event handler, and the player entity
     def __init__( self, player: Actor ):
-
-        self.event_handler: EventHandler = MainGameEventHandler( self )
+        
         self.message_log = MessageLog()
         self.mouse_location = ( 0, 0 )
         self.player = player

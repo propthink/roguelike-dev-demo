@@ -5,7 +5,11 @@ import actions # type: ignore
 import color # type: ignore
 import components.ai # type: ignore
 import components.inventory # type: ignore
-from input_handlers import AreaRangedAttackHandler, SingleRangedAttackHandler # type: ignore
+from input_handlers import ( # type: ignore
+    ActionOrHandler,
+    AreaRangedAttackHandler, 
+    SingleRangedAttackHandler 
+)
 from components.base_component import BaseComponent # type: ignore
 from exceptions import Impossible # type: ignore
 
@@ -17,7 +21,7 @@ class Consumable( BaseComponent ):
     parent: Item
 
     # try to return the action for this item
-    def get_action( self, consumer: Actor ) -> Optional[ actions.Action ]: # type: ignore
+    def get_action( self, consumer: Actor ) -> Optional[ ActionOrHandler ]: # type: ignore
 
         return actions.ItemAction( consumer, self.parent )
     
@@ -43,16 +47,15 @@ class ConfusionConsumable( Consumable ):
 
         self.number_of_turns = number_of_turns
 
-    def get_action( self, consumer: Actor ) -> Optional[ actions.Action ]:
+    def get_action( self, consumer: Actor ) -> SingleRangedAttackHandler:
 
         self.engine.message_log.add_message(
             "Select a target location.", color.needs_target
         )
-        self.engine.event_handler = SingleRangedAttackHandler(
+        return SingleRangedAttackHandler(
             self.engine,
             callback=lambda xy: actions.ItemAction( consumer, self.parent, xy )
         )
-        return None
     
     def activate( self, action: actions.ItemAction ) -> None:
 
@@ -104,16 +107,15 @@ class FireballDamageConsumable( Consumable ):
         self.damage = damage
         self.radius = radius
 
-    def get_action( self, consumer: Actor ) -> Optional[actions.Action]:
+    def get_action( self, consumer: Actor ) -> AreaRangedAttackHandler:
         self.engine.message_log.add_message(
             "Select a target location.", color.needs_target
         )
-        self.engine.event_handler = AreaRangedAttackHandler(
+        return AreaRangedAttackHandler(
             self.engine,
             radius=self.radius,
             callback=lambda xy: actions.ItemAction( consumer, self.parent, xy )
         )
-        return None
     
     def activate( self, action: actions.ItemAction ) -> None:
         target_xy = action.target_xy

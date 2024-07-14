@@ -3,3 +3,8 @@
 class Impossible( Exception ):
 
     pass
+
+# can be raised to exit the game without automatically saving
+class QuitWithoutSaving( SystemExit ):
+
+    pass

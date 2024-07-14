@@ -6,10 +6,12 @@ import tcod
 import color
 from engine import Engine # type: ignore
 import entity_factories
+import exceptions
+import input_handlers
 from proc_gen import generate_dungeon # type: ignore
 
 # define main
-def main():
+def main() -> None:
 
     # screen dimensions (in tiles)
     screen_width = 80
@@ -55,6 +57,9 @@ def main():
     engine.message_log.add_message(
         "I used to be an adventurer like you. Then I took an arrow in the knee...", color.welcome_text
     )
+
+    # initialize event handler
+    handler: input_handlers.BaseEventHandler = input_handlers.MainGameEventHandler( engine )
     
     # initialize tcod context
     # (columns, rows, tileset, title, vsync)
@@ -71,27 +76,32 @@ def main():
         root_console = tcod.console.Console( screen_width, screen_height, order="F" )
 
         # initialize main loop
-        while True:
+        try:
+            while True:
 
-            root_console.clear()
+                root_console.clear()
+                handler.on_render( console=root_console )
+                context.present( root_console )
 
-            engine.event_handler.on_render( console=root_console )
-
-            context.present( root_console )
-
-            try:
-                
-                for event in tcod.event.wait():
-
-                    context.convert_event( event )
-                    engine.event_handler.handle_events( event )
-
-            except Exception: # handle exceptions in game
-
-                traceback.print_exc() # print error to stderr
-
-                # then print the error to the message log
-                engine.message_log.add_message( traceback.format_exc(), color.error )
+                try:
+                    for event in tcod.event.wait():
+                        context.convert_event( event )
+                        handler = handler.handle_events( event )
+                except Exception: # handle exceptions in game
+                    traceback.print_exc() # print the error to stderr
+                    # then print the error to the message log
+                    if isinstance( handler, input_handlers.EventHandler ):
+                        handler.engine.message_log.add_message(
+                            traceback.format_exc(), color.error
+                        )
+        except exceptions.QuitWithoutSaving:
+            raise
+        except SystemExit: # save and quit
+            # TODO: add the save function here
+            raise
+        except BaseException: # save on any other unexpected exception
+            # TODO: add the save function here
+            raise
 
 # execute main
 if __name__ == "__main__":
