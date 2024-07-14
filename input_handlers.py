@@ -1,6 +1,8 @@
 # import dependencies
 from __future__ import annotations
 
+import os
+
 from typing import Callable, Optional, Tuple, TYPE_CHECKING, Union
 import tcod.event # type: ignore
 from tcod import libtcodpy # type: ignore
@@ -74,9 +76,38 @@ class BaseEventHandler( tcod.event.EventDispatch[ ActionOrHandler ] ):
 
         raise NotImplementedError()
     
-    def ev_quit( self, event: tcod.event.Quit ) -> Optional[ Axtion ]:
+    def ev_quit( self, event: tcod.event.Quit ) -> Optional[ Action ]:
 
         raise SystemExit()
+    
+# display a pop-up text window
+class PopupMessage( BaseEventHandler ):
+
+    def __init__( self, parent_handler: BaseEventHandler, text: str ):
+
+        self.parent = parent_handler
+        self.text = text
+
+    def on_render( self, console: tcod.console.Console ) -> None:
+
+        # render the parent and dim the result, then print the message on top
+        self.parent.on_render( console )
+        console.rgb["fg"] //= 8
+        console.rgb["bg"] //= 8
+
+        console.print(
+            console.width // 2,
+            console.height // 2,
+            self.text,
+            fg=color.white,
+            bg=color.black,
+            alignment = libtcodpy.CENTER
+        )
+
+    # any key returns to the parent handler
+    def ev_keydown( self, event: tcod.event.KeyDown ) -> Optional[ BaseEventHandler ]:
+
+        return self.parent
 
 # used to dispatch events to specific methods
 class EventHandler( BaseEventHandler ):
@@ -443,12 +474,25 @@ class MainGameEventHandler( EventHandler ):
 #
 class GameOverEventHandler( EventHandler ):
 
+    # handle exiting out of a finished game
+    def on_quit( self ) -> None:
+
+        if os.path.exists( "savegame.sav" ):
+
+            os.remove( "savegame.sav" ) # deletes the active save file
+
+        raise exceptions.QuitWithoutSaving() # avoid saving a finished game
+    
+    def ev_quit( self, event: tcod.event.Quit ) -> None:
+
+        self.on_quit()
+    
     # return the appropriate Action object based on event input
     def ev_keydown( self, event: tcod.event.KeyDown ) -> Optional[ Action ]:
 
         if event.sym == tcod.event.KeySym.ESCAPE:
 
-            raise SystemExit()
+            self.on_quit()
     
 #
 CURSOR_Y_KEYS = {

@@ -1,10 +1,11 @@
 # import dependencies
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
-
+import lzma
+import pickle
 from tcod.console import Console
 from tcod.map import compute_fov
+from typing import TYPE_CHECKING
 
 from entity import Entity # type: ignore
 from game_map import GameMap # type: ignore
@@ -74,3 +75,12 @@ class Engine:
         )
         # render entity names at the mouse location
         render_names_at_mouse_location( console=console, x=21, y=44, engine=self )
+
+    # save this engine instance as a compressed file
+    def save_as( self, filename: str ) -> None:
+
+        save_data = lzma.compress( pickle.dumps( self ) )
+
+        with open( filename, "wb" ) as f:
+
+            f.write( save_data )

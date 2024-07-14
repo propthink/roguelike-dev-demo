@@ -7,6 +7,15 @@ import exceptions
 import input_handlers
 import setup_game
 
+# if the current event handler has an active engine then save it
+def save_game( handler: input_handlers.BaseEventHandler, filename: str ) -> None:
+
+    if isinstance( handler, input_handlers.EventHandler ):
+
+        handler.engine.save_as( filename )
+
+        print( "Game saved." )
+
 # define main
 def main() -> None:
 
@@ -58,10 +67,10 @@ def main() -> None:
         except exceptions.QuitWithoutSaving:
             raise
         except SystemExit: # save and quit
-            # TODO: add the save function here
+            save_game( handler, "savegame.sav" )
             raise
         except BaseException: # save on any other unexpected exception
-            # TODO: add the save function here
+            save_game( handler, "savegame.sav" )
             raise
 
 # execute main
