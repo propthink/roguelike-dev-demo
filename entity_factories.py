@@ -3,6 +3,7 @@ from components.ai import HostileEnemy # type: ignore
 from components import consumable # type: ignore
 from components.fighter import Fighter # type: ignore
 from components.inventory import Inventory # type: ignore
+from components.level import Level # type: ignore
 from entity import Actor, Item # type: ignore
 
 # human, player
@@ -12,7 +13,8 @@ player = Actor(
     name="Player",
     ai_cls=HostileEnemy,
     fighter=Fighter( hp=30, defense=2, power=5 ),
-    inventory=Inventory(capacity=26)
+    inventory=Inventory(capacity=26),
+    level=Level(level_up_base=200)
 )
 
 # monster, orc
@@ -22,7 +24,8 @@ orc = Actor(
     name="Orc",
     ai_cls=HostileEnemy,
     fighter=Fighter( hp=10, defense=0, power=3 ),
-    inventory=Inventory(capacity=0)
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=35)
 )
 
 # monster, troll
@@ -32,7 +35,8 @@ troll = Actor(
     name="Troll",
     ai_cls=HostileEnemy,
     fighter=Fighter( hp=16, defense=1, power=4 ),
-    inventory=Inventory(capacity=0)
+    inventory=Inventory(capacity=0),
+    level=Level(xp_given=100)
 )
 
 # health potion

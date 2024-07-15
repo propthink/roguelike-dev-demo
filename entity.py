@@ -12,6 +12,7 @@ if TYPE_CHECKING:
     from components.consumable import Consumable # type: ignore
     from componets.fighter import Fighter # type: ignore
     from components.inventory import Inventory # type: ignore
+    from components.level import level # type: ignore
     from game_map import GameMap
 
 #
@@ -108,7 +109,8 @@ class Actor( Entity ):
         name: str = "<Unnamed>",
         ai_cls: Type[ BaseAI ],
         fighter: Fighter,
-        inventory: Inventory
+        inventory: Inventory,
+        level: Level
     ):
         super().__init__(
 
@@ -125,6 +127,8 @@ class Actor( Entity ):
         self.fighter.parent = self
         self.inventory = inventory
         self.inventory.parent = self
+        self.level=level
+        self.level.parent=self
 
     # returns true as long as this actor can perform actions
     @property
