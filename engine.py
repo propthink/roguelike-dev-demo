@@ -15,13 +15,14 @@ from render_functions import render_bar, render_names_at_mouse_location # type: 
 
 if TYPE_CHECKING:
     from entity import Actor # type: ignore
-    from game_map import GameMap
+    from game_map import GameMap, GameWorld
 
 # manages the current state of the game
 class Engine:
 
     #
     game_map: GameMap
+    game_world: GameWorld
 
     # initialize engine with a set of entities, an event handler, and the player entity
     def __init__( self, player: Actor ):

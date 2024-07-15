@@ -423,8 +423,17 @@ class MainGameEventHandler( EventHandler ):
         # capture key press
         key = event.sym
 
+        #
+        modifier = event.mod
+
         # grab the player from the engine
         player = self.engine.player
+
+        #
+        if key == tcod.event.KeySym.PERIOD and modifier & (
+            tcod.event.KMOD_LSHIFT | tcod.event.KMOD_RSHIFT
+        ):
+            return actions.TakeStairsAction( player )
 
         # user attempts to move
         if key in MOVE_KEYS:

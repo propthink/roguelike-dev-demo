@@ -141,6 +141,9 @@ def generate_dungeon(
     # initialize a container for generated rooms
     rooms: List[ RectangularRoom ] = []
 
+    #
+    center_of_last_room = (0, 0)
+
     # step through each possible room
     for r in range( max_rooms ):
 
@@ -176,8 +179,15 @@ def generate_dungeon(
 
                 dungeon.tiles[ x, y ] = tile_types.floor
 
+            #
+            center_of_last_room = new_room.center
+
         # populate the room with enemies
         place_entities( new_room, dungeon, max_monsters_per_room, max_items_per_room )
+
+        #
+        dungeon.tiles[ center_of_last_room ] = tile_types.down_stairs
+        dungeon.downstairs_location = center_of_last_room
 
         # finally, append the new room to the list
         rooms.append( new_room )
