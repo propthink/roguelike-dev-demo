@@ -13,6 +13,38 @@ if TYPE_CHECKING:
     from entity import Entity
 
 #
+max_items_by_floor = [
+    ( 1, 1 ),
+    ( 4, 2 )
+]
+
+#
+max_monsters_by_floor = [
+    ( 1, 2 ),
+    ( 4, 3 ),
+    ( 6, 5 )
+]
+
+#
+def get_max_value_for_floor(
+    max_value_by_floor: List[Tuple[int, int]], floor: int
+) -> int:
+    
+    current_value = 0
+
+    for floor_minimum, value in max_value_by_floor:
+
+        if floor_minimum > floor:
+
+            break
+
+        else:
+
+            current_value = value
+
+    return current_value
+
+#
 class RectangularRoom:
 
     # initialize with the x,y coordinates of the top-left corner
@@ -50,13 +82,14 @@ class RectangularRoom:
         )
     
 # populate a room with enemies
-def place_entities(
-    room: RectangularRoom, dungeon: GameMap, maximum_monsters: int, maximum_items: int
-) -> None:
-    
-    # generate the number of monsters and items in the current room
-    number_of_monsters = random.randint( 0, maximum_monsters )
-    number_of_items = random.randint( 0, maximum_items )
+def place_entities( room: RectangularRoom, dungeon: GameMap, floor_number: int ) -> None:
+
+    number_of_monsters = random.randint(
+        0, get_max_value_for_floor( max_monsters_by_floor, floor_number )
+    )
+    number_of_items = random.randint(
+        0, get_max_value_for_floor( max_items_by_floor, floor_number )
+    )
 
     # step through each possible monster
     for i in range( number_of_monsters ):
@@ -127,8 +160,6 @@ def generate_dungeon(
     room_max_size: int,
     map_width: int,
     map_height: int,
-    max_monsters_per_room: int,
-    max_items_per_room: int,
     engine: Engine
 ) -> GameMap:
     
@@ -183,7 +214,7 @@ def generate_dungeon(
             center_of_last_room = new_room.center
 
         # populate the room with enemies
-        place_entities( new_room, dungeon, max_monsters_per_room, max_items_per_room )
+        place_entities( new_room, dungeon, engine.game_world.current_floor )
 
         #
         dungeon.tiles[ center_of_last_room ] = tile_types.down_stairs
